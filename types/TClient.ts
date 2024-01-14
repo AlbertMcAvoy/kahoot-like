@@ -3,5 +3,4 @@ export type TClient = {
     username: string;
     score: number;
     isOwner: boolean;
-    clientEmit: (ev, ...args) => boolean;
 }

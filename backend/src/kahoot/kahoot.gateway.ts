@@ -4,8 +4,7 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect,
     SubscribeMessage,
-    WebSocketGateway,
-    WebSocketServer
+    WebSocketGateway
 } from "@nestjs/websockets";
 import { Socket } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,10 +19,9 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     gameList: TGame[] = [];
 
-    totalRound: number;
+    clientList: Socket[] = [];
 
-    @WebSocketServer()
-    server: Socket;
+    totalRound: number;
 
     apiService: IApiIA;
 
@@ -49,6 +47,7 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         };
 
         this.gameList.push(newGame);
+        this.clientList.push(client);
 
         client.emit('client-kahoot-create', newGame);
     }
@@ -62,9 +61,11 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const cGame = this.getCurrentGame(data.gameId, client);
 
         cGame.playersList.push(player);
+        this.clientList.push(client);
 
         cGame.playersList.forEach((c) => {
-            c.clientEmit('client-kahoot-join', cGame);
+            this.clientList.find(c_ => c_.id === c.id)
+                .emit('client-kahoot-join', cGame);
         });
     }
 
@@ -80,14 +81,20 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
             1,
         );
 
+        this.clientList.splice(
+            this.clientList.findIndex((c) => c.id === client.id),
+            1,
+        );
+
         cGame.playersList.forEach((c) => {
-            c.clientEmit('client-kahoot-players', cGame);
+            this.clientList.find(c_ => c_.id === c.id)
+                .emit('client-kahoot-players', cGame);
         });
     }
 
     @SubscribeMessage('server-kahoot-round')
     handleRoundGame(
-        @MessageBody() data: { gameId: String },
+        @MessageBody() data: { gameId: string },
         @ConnectedSocket() client: Socket
     ): void {
         const cGame = this.getCurrentGame(data.gameId, client);
@@ -100,11 +107,13 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
             );
 
             cGame.playersList.forEach((c) => {
-                c.clientEmit('client-kahoot-end', cGame);
+                this.clientList.find(c_ => c_.id === c.id)
+                    .emit('client-kahoot-end', cGame);
             });
         } else {
             cGame.playersList.forEach((c) => {
-                c.clientEmit('client-kahoot-round', this.apiService.getQuestion(cGame));
+                this.clientList.find(c_ => c_.id === c.id)
+                    .emit('client-kahoot-round', this.apiService.getQuestion(cGame));
             });
         }
     }
@@ -156,8 +165,7 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
             id: client.id,
             isOwner,
             score: 0,
-            username,
-            clientEmit: client.emit
+            username
         };
     }
 }

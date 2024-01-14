@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-end-rgb: rgba(0, 128, 128, 1);
+  --background-start-rgb: rgba(40, 17, 43, 1);
+  --color-primary: #F49D37;
+  --text-color-primary: #FFFFFF;
+  --text-color-secondary: #453643;
+  --highlight: #C04ABC;
+  --color-alert: #D72638;
+}
+
+body {
+  color: var(--text-color-primary);
+  background: rgb(2,0,36);
+  background: linear-gradient(0deg, var(--background-start-rgb) 0%, var(--background-end-rgb) 100%);
+}
+
+.text-primary {
+  color: var(--text-color-primary);
+}
+
+.text-secondary {
+  color: var(--text-color-secondary);
+}
