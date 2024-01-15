@@ -49,7 +49,10 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.gameList.push(newGame);
         this.clientList.push(client);
 
-        client.emit('client-kahoot-create', newGame);
+        client.emit('client-kahoot-create', {
+            game: newGame,
+            owner
+        });
     }
 
     @SubscribeMessage('server-kahoot-join')
@@ -64,8 +67,18 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.clientList.push(client);
 
         cGame.playersList.forEach((c) => {
-            this.clientList.find(c_ => c_.id === c.id)
-                .emit('client-kahoot-join', cGame);
+            const c__ = this.clientList.find(c_ => c_.id === c.id);
+            if (c__.id == client.id) {
+                c__.emit('client-kahoot-join', {
+                    game: cGame,
+                    player
+                });
+            } else {
+                c__.emit('client-kahoot-join', {
+                    game: cGame,
+                    player: null
+                });
+            }
         });
     }
 

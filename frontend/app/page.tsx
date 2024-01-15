@@ -4,6 +4,7 @@ import MainPage from "@/app/Components/MainPage";
 import {useEffect, useState} from "react";
 import {io} from "socket.io-client";
 import {TGame} from "../../types/TGame";
+import {TClient} from "../../types/TClient";
 import LobbyPage from "@/app/Components/LobbyPage";
 
 const socket = io('http://localhost:3001');
@@ -14,16 +15,23 @@ export default function Home() {
 
     const [currentGame, setCurrentGame] = useState<TGame>(null);
 
+    const [currentPlayer, setCurrentPlayer] = useState<TClient>(null);
+
     useEffect(() => {
-        socket.on('client-kahoot-create', (data) => {
-            console.log(data.id)
-            setCurrentGame(data);
+        socket.on('client-kahoot-create', (data: {game: TGame, owner: TClient}) => {
+            setCurrentGame(data.game);
+            setCurrentPlayer(data.owner);
             setState('lobby');
         });
 
-        socket.on('client-kahoot-join', (data) => {
-            setCurrentGame(data);
+        socket.on('client-kahoot-join', (data: {game: TGame, player: TClient|null}) => {
+            setCurrentGame(data.game);
+            if (data.player != null) setCurrentPlayer(data.player);
             setState('lobby');
+        });
+
+        socket.on('client-kahoot-players', (data: TGame) => {
+            setCurrentGame(data);
         });
 
         socket.on('server-error', (data) => {
@@ -31,11 +39,29 @@ export default function Home() {
         });
     }, [currentGame]);
 
+    const isHidden = () => {
+        return currentGame === null ? 'hidden' : '';
+    }
+
+    const leave = () => {
+        socket.emit('server-kahoot-leave', {
+            username: currentPlayer.username,
+            gameId: currentGame.id
+        });
+
+        setCurrentGame(null);
+        setState('home');
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center p-12">
-            <h1 className="text-4xl"> Kahoot Like </h1>
+            <div className="flex gap-6">
+                <h1 className="text-4xl"> Kahoot Like </h1>
+                <button className={'border border-2 btn-alert rounded p-2 ' + isHidden()}
+                        onClick={() => leave()}> Leave the game </button>
+            </div>
             <MainPage socket={socket} state={state} />
-            <LobbyPage socket={socket} state={state} currentGame={currentGame} />
+            <LobbyPage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
         </main>
     )
 }

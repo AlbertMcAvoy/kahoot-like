@@ -28,7 +28,7 @@ const MainPage = ({ socket, state }: TProps) => {
             });
         } else { // join action
             if (gameId === '') {
-                alert('You have to specify a game Id to join the game')
+                alert('You have to specify a game Id to join a game')
                 return;
             }
 
@@ -36,6 +36,8 @@ const MainPage = ({ socket, state }: TProps) => {
                 username,
                 gameId
             });
+
+            setGameId('');
         }
     }
 
