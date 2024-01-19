@@ -1,4 +1,5 @@
 import {TClient} from "./TClient";
+import {TQuestion} from "./TQuestion";
 
 export type TGame = {
     id: string;
@@ -7,4 +8,5 @@ export type TGame = {
     totalRound: number;
     currentRound: number;
     playersList: TClient[];
+    questionsList: TQuestion[];
 }

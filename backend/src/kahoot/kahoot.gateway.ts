@@ -13,6 +13,8 @@ import { TGame } from "../../../types/TGame";
 import { IApiIA } from "./services/IApiIA";
 import { FakeAIService } from "./services/FakeAI.service";
 import { OpenAIService } from "./services/OpenAI.service";
+import {config} from "dotenv";
+config();
 
 @WebSocketGateway({ cors: true })
 export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -20,8 +22,6 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
     gameList: TGame[] = [];
 
     clientList: Socket[] = [];
-
-    totalRound: number;
 
     apiService: IApiIA;
 
@@ -43,7 +43,8 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
             difficulty: '',
             currentRound: 0,
             playersList: [owner],
-            totalRound: this.totalRound
+            totalRound: 0,
+            questionsList: []
         };
 
         this.gameList.push(newGame);
@@ -105,6 +106,24 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         });
     }
 
+    @SubscribeMessage('server-kahoot-start')
+    handleStartGame(
+        @MessageBody() data: { gameId: string, topic: string, difficulty: string, totalRound: number },
+        @ConnectedSocket() client: Socket
+    ): void {
+        let cGame = this.getCurrentGame(data.gameId, client);
+        cGame.topic = data.topic;
+        cGame.difficulty = data.difficulty;
+        cGame.totalRound = data.totalRound;
+        this.apiService.fillGameQuestionList(cGame).then((game) => {
+            cGame = game;
+            cGame.playersList.forEach((c) => {
+                this.clientList.find(c_ => c_.id === c.id)
+                    .emit('client-kahoot-start', cGame);
+            });
+        });
+    }
+
     @SubscribeMessage('server-kahoot-round')
     handleRoundGame(
         @MessageBody() data: { gameId: string },
@@ -126,7 +145,7 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         } else {
             cGame.playersList.forEach((c) => {
                 this.clientList.find(c_ => c_.id === c.id)
-                    .emit('client-kahoot-round', this.apiService.getQuestion(cGame));
+                    .emit('client-kahoot-round', cGame);
             });
         }
     }
