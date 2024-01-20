@@ -6,6 +6,7 @@ import {io} from "socket.io-client";
 import {TGame} from "../../types/TGame";
 import {TClient} from "../../types/TClient";
 import LobbyPage from "@/app/Components/LobbyPage";
+import GamePage from "@/app/Components/GamePage";
 
 const socket = io('http://localhost:3001');
 
@@ -32,6 +33,10 @@ export default function Home() {
 
         socket.on('client-kahoot-players', (data: TGame) => {
             setCurrentGame(data);
+        });
+
+        socket.on('client-kahoot-start', (data: TGame) => {
+            setState('game');
         });
 
         socket.on('server-error', (data) => {
@@ -62,6 +67,7 @@ export default function Home() {
             </div>
             <MainPage socket={socket} state={state} />
             <LobbyPage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
+            <GamePage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
         </main>
     )
 }
