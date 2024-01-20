@@ -26,7 +26,7 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
     apiService: IApiIA;
 
     constructor() {
-        // this.apiService = process.env.OPEN_API_KEY != '' ? new OpenAIService() : new FakeAIService();
+        this.apiService = process.env.OPEN_API_KEY != '' ? new OpenAIService() : new FakeAIService();
         this.apiService = new FakeAIService();
     }
 
@@ -121,7 +121,7 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
             console.log(cGame)
             cGame.playersList.forEach((c) => {
                 this.clientList.find(c_ => c_.id === c.id)
-                    .emit('client-kahoot-start', console.log(cGame));
+                    .emit('client-kahoot-start', cGame);
             });
         });
     }
