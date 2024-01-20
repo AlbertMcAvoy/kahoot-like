@@ -19,15 +19,15 @@ const GamePage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
 
 
     return (
-        console.log(currentGame?.questionsList[0])
-        // <div className={ 'm-5 ' + isHidden()}>
-        //     Game id: <span className="text-highlight"> {currentGame?.id} </span>
+        // console.log(currentGame?.questionsList[0])
+        <div className={ 'm-5 ' + isHidden()}>
+            Game id: <span className="text-highlight"> {currentGame?.id} </span>
 
-        //     <div className="flex gap-5 m-6">
-        //         <span>
-        //         </span>
-        //     </div>
-        // </div>
+            <div className="flex gap-5 m-6">
+                <span>
+                </span>
+            </div>
+        </div>
     )
 }
 

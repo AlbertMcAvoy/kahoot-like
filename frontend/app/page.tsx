@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {io} from "socket.io-client";
 import {TGame} from "../../types/TGame";
 import {TClient} from "../../types/TClient";
+import {TQuestion} from "../../types/TQuestion";
 import LobbyPage from "@/app/Components/LobbyPage";
 import GamePage from "@/app/Components/GamePage";
 
@@ -17,6 +18,7 @@ export default function Home() {
     const [currentGame, setCurrentGame] = useState<TGame>(null);
 
     const [currentPlayer, setCurrentPlayer] = useState<TClient>(null);
+    const [currentQuestion, setCurrentQuestion] = useState<TQuestion>(null);
 
     useEffect(() => {
         socket.on('client-kahoot-create', (data: {game: TGame, owner: TClient}) => {
@@ -36,6 +38,9 @@ export default function Home() {
         });
 
         socket.on('client-kahoot-start', (data: TGame) => {
+            setCurrentGame(data);
+            // setCurrentQuestion(data.questionsList)
+            console.log(currentQuestion)
             setState('game');
         });
 

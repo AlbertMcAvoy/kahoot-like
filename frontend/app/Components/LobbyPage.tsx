@@ -29,6 +29,7 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
     const handleStartGame = (event: any) => {
         event.preventDefault();
         let gameId = currentGame.id
+        console.log(totalRound)
         socket.emit('server-kahoot-start', {
             gameId,
             topic,
