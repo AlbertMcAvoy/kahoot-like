@@ -33,34 +33,11 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
         });
     }
 
-    const start = () => {
-        socket.emit('server-kahoot-start', {
-            gameId: currentGame.id,
-            difficulty: 'Facile',
-            topic: 'Géographie',
-            totalRound: 8
-        });
-    }
-
     return (
         <div className={ 'm-5 ' + isHidden()}>
             Game id: <span className="text-highlight"> {currentGame?.id} </span>
 
-            <button className={'border border-2 btn-alert rounded p-2 ' + isHidden()}
-                    onClick={() => start()}> Start the game </button>
-
-            <div className="flex gap-5 m-6">
-                { 
-                currentGame?.playersList.map((player) => {
-                    return (
-                        <div key={player.id} className={"p-3 rounded " + (player.isOwner ? 'bg-red-500' : 'bg-primary')}>
-                            <span> { player.username } </span>
-                        </div>
-                    )
-                }) }
-            </div>
-
-            <form className={(currentPlayer?.isOwner ? '' : 'hidden')} onSubmit={(event) => handleStartGame(event)}>
+            <form className={"flex flex-col gap-5 m-6 " + (currentPlayer?.isOwner ? '' : 'hidden')} onSubmit={(event) => handleStartGame(event)}>
                 <div>
                     <label htmlFor="topic"
                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Topic </label>
@@ -88,8 +65,19 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
                            onChange={e => setTotalRound(parseInt(e.currentTarget.value))}
                            placeholder="3" required />
                 </div>
-                <button className={"border bg-slate-300 border-slate-300 hover:border-slate-500 p-2 rounded text-secondary"} type="submit">Démarrer</button>
+                <button className={"border bg-slate-300 border-slate-300 hover:border-slate-500 p-2 rounded text-secondary w-1/2 self-center"} type="submit">Start the game</button>
             </form>
+
+            <div className="flex gap-5 m-6">
+                {
+                    currentGame?.playersList.map((player) => {
+                        return (
+                            <div key={player.id} className={"p-3 rounded " + (player.isOwner ? 'bg-red-500' : 'bg-primary')}>
+                                <span> { player.username } </span>
+                            </div>
+                        )
+                    }) }
+            </div>
         </div>
     )
 }
