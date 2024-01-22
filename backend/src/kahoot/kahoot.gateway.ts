@@ -117,7 +117,6 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         cGame.totalRound = data.totalRound;
         this.apiService.fillGameQuestionList(cGame).then((game) => {
             cGame = game;
-            console.log(cGame)
             cGame.playersList.forEach((c) => {
                 this.clientList.find(c_ => c_.id === c.id)
                     .emit('client-kahoot-start', cGame);
@@ -133,21 +132,16 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const cGame = this.getCurrentGame(data.gameId, client);
         cGame.currentRound++;
 
-        if (cGame.currentRound > cGame.totalRound) {
-            this.gameList.splice(
-                this.gameList.findIndex((g) => g.id === data.gameId),
-                1,
-            );
+        if (cGame.currentRound >= cGame.totalRound) {
+            // TODO : move in a function handleEndGame, call when the owner click on "end the game" on the result page
+            // this.gameList.splice(
+            //     this.gameList.findIndex((g) => g.id === data.gameId),
+            //     1,
+            // );
 
-            cGame.playersList.forEach((c) => {
-                this.clientList.find(c_ => c_.id === c.id)
-                    .emit('client-kahoot-end', cGame);
-            });
+            client.emit('client-kahoot-end', cGame);
         } else {
-            cGame.playersList.forEach((c) => {
-                this.clientList.find(c_ => c_.id === c.id)
-                    .emit('client-kahoot-round', cGame);
-            });
+            client.emit('client-kahoot-round', cGame);
         }
     }
 

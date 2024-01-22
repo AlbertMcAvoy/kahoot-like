@@ -35,9 +35,13 @@ export default function Home() {
             setCurrentGame(data);
         });
 
-        socket.on('client-kahoot-start', (data: TGame) => {
+        socket.on('client-kahoot-start', handleStartAndRound);
+
+        socket.on('client-kahoot-round', handleStartAndRound);
+
+        socket.on('client-kahoot-end', (data: TGame) => {
             setCurrentGame(data);
-            setState('game');
+            setState('home'); // TODO replace with result !
         });
 
         socket.on('client-kahoot-answer', (data: TGame) => {
@@ -54,6 +58,11 @@ export default function Home() {
             alert(data.status + ' : ' + data.msg)
         });
     }, [currentGame]);
+
+    const handleStartAndRound = (data: TGame) => {
+        setCurrentGame(data);
+        setState('game');
+    }
 
     const isHidden = () => {
         return currentGame === null ? 'hidden' : '';
@@ -78,7 +87,7 @@ export default function Home() {
             </div>
             <MainPage socket={socket} state={state} />
             <LobbyPage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
-            <GamePage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
+            <GamePage socket={socket} state={state} currentGame={currentGame} />
         </main>
     )
 }

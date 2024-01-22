@@ -22,7 +22,7 @@ export class OpenAIService implements IApiIA {
                 },
                 {
                     role: 'assistant',
-                    content: 'Exemple de réponses : [{id: 0; value: "Quelle est la capitale de France ?"; propositions: [{id: 1; value: "Berlin"}, {id: 2; value: "Paris"}, {id: 3; value: "Madrid"}, {id: 4; value: "Lisbonne"}]; answer: 2}, {id: 1; value: "Combien y a-t-il d\'Etats en Amérique ?"; propositions: [{id: 1; value: "25"}, {id: 2; value: "61"}, {id: 3; value: "47"}, {id: 4; value: "50"}]; answer: 4}]'
+                    content: 'Exemple de réponses : {questions: [{id: 0; value: "Quelle est la capitale de France ?"; propositions: [{id: 1; value: "Berlin"}, {id: 2; value: "Paris"}, {id: 3; value: "Madrid"}, {id: 4; value: "Lisbonne"}]; answer: 2}, {id: 1; value: "Combien y a-t-il d\'Etats en Amérique ?"; propositions: [{id: 1; value: "25"}, {id: 2; value: "61"}, {id: 3; value: "47"}, {id: 4; value: "50"}]; answer: 4}]}'
                 },
                 {
                     role: 'user',
@@ -32,7 +32,7 @@ export class OpenAIService implements IApiIA {
             model: 'gpt-3.5-turbo-1106',
         });
 
-        game.questionsList = JSON.parse(completion.choices[0].message.content);
+        game.questionsList = JSON.parse(completion.choices[0].message.content).questions;
 
         return game;
     }
