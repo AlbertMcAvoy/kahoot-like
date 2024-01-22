@@ -5,7 +5,6 @@ import {useEffect, useState} from "react";
 import {io} from "socket.io-client";
 import {TGame} from "../../types/TGame";
 import {TClient} from "../../types/TClient";
-import {TQuestion} from "../../types/TQuestion";
 import LobbyPage from "@/app/Components/LobbyPage";
 import GamePage from "@/app/Components/GamePage";
 
@@ -18,7 +17,6 @@ export default function Home() {
     const [currentGame, setCurrentGame] = useState<TGame>(null);
 
     const [currentPlayer, setCurrentPlayer] = useState<TClient>(null);
-    const [currentQuestion, setCurrentQuestion] = useState<TQuestion>(null);
 
     useEffect(() => {
         socket.on('client-kahoot-create', (data: {game: TGame, owner: TClient}) => {
@@ -39,9 +37,18 @@ export default function Home() {
 
         socket.on('client-kahoot-start', (data: TGame) => {
             setCurrentGame(data);
-            // setCurrentQuestion(data.questionsList)
-            console.log(currentQuestion)
+            console.log(data)
             setState('game');
+        });
+
+        socket.on('client-kahoot-answer', (data: TGame) => {
+            if(data) {
+                document.getElementById("FormAnswer")?.classList.add('hidden')
+                alert("votre reponse a bien été comptabilisé")
+            }
+            else {
+                alert("votre reponse n'a pas été comptabilisé veuillez retenter")
+            }
         });
 
         socket.on('server-error', (data) => {

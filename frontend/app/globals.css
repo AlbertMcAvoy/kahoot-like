@@ -45,3 +45,7 @@ body {
 .text-highlight {
   color: var(--color-primary);
 }
+
+.btn {
+  cursor: pointer;
+}

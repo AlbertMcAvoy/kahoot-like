@@ -39,7 +39,6 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
 
         }
 
-
     return (
         <div className={ 'm-5 ' + isHidden()}>
             Game id: <span className="text-highlight"> {currentGame?.id} </span>
@@ -47,8 +46,11 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
             <div className="flex gap-5 m-6">
                 { 
                 currentGame?.playersList.map((player) => {
-                    if(currentGame.playersList.length > 1) {
-                        document.getElementById("Start")?.classList.remove("hidden")
+                    console.log(player)
+                    if((username.value == player.username) && player.isOwner) {
+                        if(currentGame.playersList.length > 1) {
+                            document.getElementById("FormStart")?.classList.remove("hidden")
+                        }
                     }
                     return (
                         <div key={player.id} className={"p-3  rounded " + isOwnerClass(player.isOwner)}>
@@ -57,7 +59,10 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
                     )
                 }) }
             </div>
-            <form  onSubmit={(event) => handleStartGame(event)}>
+            {
+                
+            }
+            <form id="FormStart" className="hidden" onSubmit={(event) => handleStartGame(event)}>
                 <div>
                     <label htmlFor="topic"
                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Topic </label>
@@ -69,7 +74,7 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
                 </div>
                 <div>
                     <label htmlFor="difficulty"
-                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Topic </label>
+                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Difficulty </label>
                     <input type="text" id="difficulty"
                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            value={difficulty}
@@ -78,14 +83,14 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
                 </div>
                 <div>
                     <label htmlFor="totalRound"
-                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Topic </label>
+                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Total Round </label>
                     <input type="text" id="totalRound"
                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            value={totalRound}
                            onChange={e => setTotalRound(parseInt(e.currentTarget.value))}
                            placeholder="3" required />
                 </div>
-                <button id="Start" className="hidden border bg-slate-300 border-slate-300 hover:border-slate-500 p-2 rounded text-secondary" type="submit">Démarrer</button>
+                <button id="Start" className=" border bg-slate-300 border-slate-300 hover:border-slate-500 p-2 rounded text-secondary" type="submit">Démarrer</button>
             </form>
         </div>
     )
