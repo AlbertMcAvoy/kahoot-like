@@ -27,7 +27,6 @@ export class KahootGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     constructor() {
         this.apiService = process.env.OPEN_API_KEY != '' ? new OpenAIService() : new FakeAIService();
-        this.apiService = new FakeAIService();
     }
 
     @SubscribeMessage('server-kahoot-create')

@@ -37,7 +37,6 @@ export default function Home() {
 
         socket.on('client-kahoot-start', (data: TGame) => {
             setCurrentGame(data);
-            console.log(data)
             setState('game');
         });
 
