@@ -7,6 +7,7 @@ import { TGame } from "../../types/TGame";
 import { TClient } from "../../types/TClient";
 import LobbyPage from "@/app/Components/LobbyPage";
 import GamePage from "@/app/Components/GamePage";
+import ResultPage from "@/app/Components/ResultPage";
 
 const socket = io('http://localhost:3001');
 
@@ -47,7 +48,8 @@ export default function Home() {
         socket.off('client-kahoot-end')
         socket.on('client-kahoot-end', (data: TGame) => {
             setCurrentGame(data);
-            setState('home'); // TODO replace with result !
+            console.log(data)
+            setState('result'); // TODO replace with result !
         });
 
         socket.off('client-kahoot-answer')
@@ -96,6 +98,7 @@ export default function Home() {
             <MainPage socket={socket} state={state} />
             <LobbyPage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
             <GamePage socket={socket} state={state} currentGame={currentGame} />
+            <ResultPage socket={socket} state={state} currentGame={currentGame} />
         </main>
     )
 }
