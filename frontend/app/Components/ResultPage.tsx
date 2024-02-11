@@ -1,8 +1,8 @@
 'use client';
 
-import {Socket} from "socket.io-client";
-import {TGame} from "../../../types/TGame";
-import {useEffect, useState} from "react";
+import { Socket } from "socket.io-client";
+import { TGame } from "../../../types/TGame";
+import { useEffect, useState } from "react";
 
 type TProps = {
     socket: Socket;
@@ -13,23 +13,23 @@ type TProps = {
 const ResultPage = ({ socket, state, currentGame }: TProps) => {
 
     const isHidden = () => {
-        return state !== 'result' ? 'hidden' : '';
+        return state == 'game' || state == "result" ? '' : 'hidden';
     }
 
 
-    useEffect(() => {}, []);
+    useEffect(() => { }, []);
     return (
-        <div className={ 'm-5 ' + isHidden()}>
+        <div className={'m-5 ' + isHidden()}>
 
             <div className="flex gap-5 m-6">
                 {
                     currentGame?.playersList.map((player) => {
                         return (
                             <div key={player.id} className={"p-3 rounded " + (player.isOwner ? 'bg-red-500' : 'bg-primary')}>
-                                <span> { player.username } | {player.score} points</span>
+                                <span> {player.username} | {player.score} points</span>
                             </div>
                         )
-                    }) }
+                    })}
             </div>
         </div>
     )

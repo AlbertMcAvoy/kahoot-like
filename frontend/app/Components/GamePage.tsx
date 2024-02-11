@@ -1,8 +1,9 @@
 'use client';
 
-import {Socket} from "socket.io-client";
-import {TGame} from "../../../types/TGame";
-import {useEffect, useState} from "react";
+import { Socket } from "socket.io-client";
+import { TGame } from "../../../types/TGame";
+import { useEffect, useState } from "react";
+import ResultPage from "./ResultPage";
 
 type TProps = {
     socket: Socket;
@@ -17,7 +18,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
     const isHidden = () => {
         return state !== 'game' ? 'hidden' : '';
     }
-    
+
     const handleAnswer = (event: any) => {
         event.preventDefault();
         const playerAnswer = event.nativeEvent.submitter.id;
@@ -51,28 +52,32 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
     }, [counter, state]);
 
     return (
-        <div className={ 'm-5 ' + isHidden()}>
-            Game id: <span className="text-highlight"> {currentGame?.id} </span>
+        <div>
+            <div className={'m-5 ' + isHidden()}>
+                <p className="ms-6">Game id: <span className="text-highlight"> {currentGame?.id} </span></p>
 
-            <div className="flex justify-center m-6 p-2 border border-2 border-white rounded">
-                <span className="text-5xl">{counter}</span>
-            </div>
+                <div className="flex justify-center m-6 p-2 border border-2 border-white rounded">
+                    <span className="text-5xl">{counter}</span>
+                </div>
 
-            <div className="flex flex-col gap-5 m-6">
-                <span> { currentGame?.questionsList[currentGame?.currentRound]?.value } </span>
-                <form className={"flex flex-col gap-3"} onSubmit={(event) => handleAnswer(event)}>
-                    {
-                        currentGame?.questionsList[currentGame.currentRound]?.propositions.map((answer) => {
-                            return (
-                                <input type="submit" id={answer.id.toString()} key={answer.id}
-                               className="bg-gray-50 border btn mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:hover:ring-blue-500 dark:hover:border-blue-500"
-                               value={ answer.value }
-                               placeholder="Anwser"/>
-                            )
-                        })
-                    }
-                </form>
+                <div className="flex flex-col gap-5 m-6">
+                    <span> {currentGame?.questionsList[currentGame?.currentRound]?.value} </span>
+                    <form className={"flex flex-col gap-3"} onSubmit={(event) => handleAnswer(event)}>
+                        {
+                            currentGame?.questionsList[currentGame.currentRound]?.propositions.map((answer) => {
+                                return (
+                                    <input type="submit" id={answer.id.toString()} key={answer.id}
+                                        className="bg-gray-50 border btn mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:hover:ring-blue-500 dark:hover:border-blue-500"
+                                        value={answer.value}
+                                        placeholder="Anwser" />
+                                )
+                            })
+                        }
+                    </form>
+                </div>
+                <p className="ms-6">Attendez la fin du compteur pour passer à la question suivante</p>
             </div>
+            <ResultPage socket={socket} state={state} currentGame={currentGame} />
         </div>
     )
 }

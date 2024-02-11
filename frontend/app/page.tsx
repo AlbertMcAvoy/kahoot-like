@@ -98,7 +98,6 @@ export default function Home() {
             <MainPage socket={socket} state={state} />
             <LobbyPage socket={socket} state={state} currentGame={currentGame} currentPlayer={currentPlayer} />
             <GamePage socket={socket} state={state} currentGame={currentGame} />
-            <ResultPage socket={socket} state={state} currentGame={currentGame} />
         </main>
     )
 }
