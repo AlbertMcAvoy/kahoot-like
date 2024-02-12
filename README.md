@@ -1,5 +1,6 @@
 # Kahoot like application
 ## Run
+Before running the app, you have to create a `.env` file in `backend` directory and add `OPEN_API_KEY` with your openai key.
 You just have to run `npm run start` in `backend` directory, and `npm run dev` in `frontend` directory.
 This application is accessible from the url `http://localhost:3000`.
 
