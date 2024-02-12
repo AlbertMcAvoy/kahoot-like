@@ -7,7 +7,6 @@ import { TGame } from "../../types/TGame";
 import { TClient } from "../../types/TClient";
 import LobbyPage from "@/app/Components/LobbyPage";
 import GamePage from "@/app/Components/GamePage";
-import ResultPage from "@/app/Components/ResultPage";
 
 const socket = io('http://localhost:3001');
 
@@ -48,19 +47,7 @@ export default function Home() {
         socket.off('client-kahoot-end')
         socket.on('client-kahoot-end', (data: TGame) => {
             setCurrentGame(data);
-            console.log(data)
             setState('result'); // TODO replace with result !
-        });
-
-        socket.off('client-kahoot-answer')
-        socket.on('client-kahoot-answer', (data: TGame) => {
-            if (data) {
-                document.getElementById("FormAnswer")?.classList.add('hidden')
-                alert("votre reponse a bien été comptabilisé")
-            }
-            else {
-                alert("votre reponse n'a pas été comptabilisé veuillez retenter")
-            }
         });
 
         socket.off('server-error')

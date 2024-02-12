@@ -13,10 +13,16 @@ type TProps = {
 
 const GamePage = ({ socket, state, currentGame }: TProps) => {
 
-    const [counter, setCounter] = useState(5);
+    const [counter, setCounter] = useState<number>(10);
+
+    const [hasAnswered, setHasAnswered] = useState<boolean>(false);
 
     const isHidden = () => {
         return state !== 'game' ? 'hidden' : '';
+    }
+
+    const hasAnsweredToQuestion = (isForm) => {
+        return isForm ? hasAnswered ? 'hidden' : '' : hasAnswered ? '' : 'hidden';
     }
 
     const handleAnswer = (event: any) => {
@@ -24,11 +30,8 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
         const playerAnswer = event.nativeEvent.submitter.id;
         let score = 0;
         if (playerAnswer == currentGame.questionsList[currentGame?.currentRound].answer) {
-            score = 20;
+            score = 20 * counter;
         }
-        console.log(playerAnswer)
-        console.log(currentGame.questionsList[currentGame?.currentRound].answer)
-        console.log(score)
         socket.emit('server-kahoot-answer', {
             gameId: currentGame.id,
             score
@@ -41,15 +44,31 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
         });
     }
 
+    const clientKahootAnswer = (data: TGame) => {
+        if (data) {
+            setHasAnswered(true);
+        } else {
+            alert("An error occured, please retry");
+            setHasAnswered(false);
+        }
+    }
+
     useEffect(() => {
         if (counter > 0 && state === 'game') {
             const timer = setInterval(() => setCounter(counter - 1), 1000);
             return () => clearInterval(timer);
         } else if (state === 'game') {
             handleEndOfRound();
-            setCounter(5);
+            setCounter(10);
+            setHasAnswered(false);
         }
     }, [counter, state]);
+
+    useEffect(() => {
+        socket.off('client-kahoot-answer');
+        socket.on('client-kahoot-answer', clientKahootAnswer);
+    }, []);
+
 
     return (
         <div>
@@ -60,7 +79,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
                     <span className="text-5xl">{counter}</span>
                 </div>
 
-                <div className="flex flex-col gap-5 m-6">
+                <div className={'flex flex-col gap-5 m-6 ' + hasAnsweredToQuestion(true)}>
                     <span> {currentGame?.questionsList[currentGame?.currentRound]?.value} </span>
                     <form className={"flex flex-col gap-3"} onSubmit={(event) => handleAnswer(event)}>
                         {
@@ -75,7 +94,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
                         }
                     </form>
                 </div>
-                <p className="ms-6">Attendez la fin du compteur pour passer à la question suivante</p>
+                <p className={'ms-6 ' + hasAnsweredToQuestion(false)}> Attendez la fin du compteur pour passer à la question suivante </p>
             </div>
             <ResultPage socket={socket} state={state} currentGame={currentGame} />
         </div>

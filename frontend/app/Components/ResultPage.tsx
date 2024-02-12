@@ -1,23 +1,18 @@
 'use client';
 
-import { Socket } from "socket.io-client";
 import { TGame } from "../../../types/TGame";
-import { useEffect, useState } from "react";
 
 type TProps = {
-    socket: Socket;
     state: string;
     currentGame: TGame;
 }
 
-const ResultPage = ({ socket, state, currentGame }: TProps) => {
+const ResultPage = ({ state, currentGame }: TProps) => {
 
     const isHidden = () => {
         return state == 'game' || state == "result" ? '' : 'hidden';
     }
 
-
-    useEffect(() => { }, []);
     return (
         <div className={'m-5 ' + isHidden()}>
 
