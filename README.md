@@ -2,7 +2,9 @@
 ## Install
 `npm install` in `backend` and `frontend` directories.
 
+Before running the app, you have to create a `.env` file in `backend` directory and add `OPEN_API_KEY` with your openai key. If not, it will use the FakeApiService which returns a default game.
 ## Run
+
 `npm run start` in `backend` directory.
 
 `npm run dev` in `frontend` directory.
