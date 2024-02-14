@@ -1,9 +1,24 @@
 # Kahoot like application
+## Install
+`npm install` in `backend` and `frontend` directories.
+
 ## Run
-You just have to run `npm run start` in `backend` directory, and `npm run dev` in `frontend` directory.
+`npm run start` in `backend` directory.
+
+`npm run dev` in `frontend` directory.
+
 This application is accessible from the url `http://localhost:3000`.
 
-## instructions
+## Realization
+The team is composed of [Alexandre Monier](https://github.com/Alexti2d), [Bastien Takis](https://github.com/bastien15000) and [Myke Chastang](https://github.com/AlbertMcAvoy).
+
+Alexandre realized the ResultPage component used to print players scores and the resolution of a round (player answers, wait for the next round and print the next question).
+
+Bastien used the ResultPage to print the players scores for each round (instead of printing the scores between rounds).
+
+Myke built the backend application, the Main and Lobby page, the timer and helped Alexandre and Bastien with React issues.
+
+## Instructions
 ## Dynamic Custom Topic Quiz Challenge: Project Description
 
 Step into the future of trivia with the Dynamic Custom Topic Quiz Challenge, a revolutionary quiz platform where you're in control. Select from an endless array of topics and tailor your gameplay with difficulty settings. Immerse in the thrill of real-time, multiplayer action and compete for high scores. Seamlessly balanced with advanced security and rapid-fire performance - no lag, no downtime, just pure knowledge and fun. This is where instant gratification meets the intellect. Get ready to challenge your brain, climb the leaderboards, and be part of a vibrant trivia community. Are you up for the challenge?
