@@ -11,6 +11,9 @@ Before running the app, you have to create a `.env` file in `backend` directory 
 
 This application is accessible from the url `http://localhost:3000`.
 
+## Docker
+Go to the `docker` directory, and run `docker-compose up` (or `docker compose up` depending on your docker installation).
+
 ## Realization
 The team is composed of [Alexandre Monier](https://github.com/Alexti2d), [Bastien Takis](https://github.com/bastien15000) and [Myke Chastang](https://github.com/AlbertMcAvoy).
 
@@ -19,6 +22,7 @@ Alexandre realized the ResultPage component used to print players scores and the
 Bastien used the ResultPage to print the players scores for each round (instead of printing the scores between rounds).
 
 Myke built the backend application, the Main and Lobby page, the timer and helped Alexandre and Bastien with React issues.
+He also realised the docker environment.
 
 ## Instructions
 ## Dynamic Custom Topic Quiz Challenge: Project Description

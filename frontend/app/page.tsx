@@ -8,15 +8,15 @@ import { TClient } from "../../types/TClient";
 import LobbyPage from "@/app/Components/LobbyPage";
 import GamePage from "@/app/Components/GamePage";
 
-const socket = io('http://localhost:3001');
+const socket = io('http://api:3001');
 
 export default function Home() {
 
     const [state, setState] = useState<string>('home');
 
-    const [currentGame, setCurrentGame] = useState<TGame>(null);
+    const [currentGame, setCurrentGame] = useState<TGame|null>(null);
 
-    const [currentPlayer, setCurrentPlayer] = useState<TClient>(null);
+    const [currentPlayer, setCurrentPlayer] = useState<TClient|null>(null);
 
     useEffect(() => {
         socket.off('client-kahoot-create')
@@ -51,7 +51,7 @@ export default function Home() {
         });
 
         socket.off('server-error')
-        socket.on('server-error', (data) => {
+        socket.on('server-error', (data: any) => {
             alert(data.status + ' : ' + data.msg)
         });
     }, [currentGame]);
@@ -67,8 +67,8 @@ export default function Home() {
 
     const leave = () => {
         socket.emit('server-kahoot-leave', {
-            username: currentPlayer.username,
-            gameId: currentGame.id
+            username: currentPlayer?.username,
+            gameId: currentGame?.id
         });
 
         setCurrentGame(null);

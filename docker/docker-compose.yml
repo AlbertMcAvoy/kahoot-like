@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  kahoot_like:
+    name: fastnetwork
+    driver: bridge
+
+services:
+  interface:
+    build:
+        context: '../.'
+        dockerfile: './frontend/docker/Dockerfile'
+    volumes:
+      - '../frontend:/app/interface'
+      - '../types:/app/types'
+      - /app/interface/.next
+      - /app/interface/node_modules
+    ports:
+      - '3000:3000'
+    networks:
+      - kahoot_like
+
+  api:
+    build:
+      context: '../.'
+      dockerfile: './backend/docker/Dockerfile'
+    volumes:
+      - '../backend:/app/api'
+      - '../types:/app/types'
+      - /app/api/node_modules
+    ports:
+      - '3001:3001'
+    networks:
+      - kahoot_like

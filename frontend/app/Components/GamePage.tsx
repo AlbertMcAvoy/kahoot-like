@@ -8,7 +8,7 @@ import ResultPage from "./ResultPage";
 type TProps = {
     socket: Socket;
     state: string;
-    currentGame: TGame;
+    currentGame: TGame | null;
 }
 
 const GamePage = ({ socket, state, currentGame }: TProps) => {
@@ -21,7 +21,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
         return state !== 'game' ? 'hidden' : '';
     }
 
-    const hasAnsweredToQuestion = (isForm) => {
+    const hasAnsweredToQuestion = (isForm: any) => {
         return isForm ? hasAnswered ? 'hidden' : '' : hasAnswered ? '' : 'hidden';
     }
 
@@ -29,11 +29,11 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
         event.preventDefault();
         const playerAnswer = event.nativeEvent.submitter.id;
         let score = 0;
-        if (playerAnswer == currentGame.questionsList[currentGame?.currentRound].answer) {
+        if (playerAnswer == currentGame?.questionsList[currentGame?.currentRound].answer) {
             score = 20 * counter;
         }
         socket.emit('server-kahoot-answer', {
-            gameId: currentGame.id,
+            gameId: currentGame?.id,
             score
         });
     }
@@ -83,7 +83,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
                     <span> {currentGame?.questionsList[currentGame?.currentRound]?.value} </span>
                     <form className={"flex flex-col gap-3"} onSubmit={(event) => handleAnswer(event)}>
                         {
-                            currentGame?.questionsList[currentGame.currentRound]?.propositions.map((answer) => {
+                            currentGame?.questionsList[currentGame?.currentRound]?.propositions.map((answer) => {
                                 return (
                                     <input type="submit" id={answer.id.toString()} key={answer.id}
                                         className="bg-gray-50 border btn mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:hover:ring-blue-500 dark:hover:border-blue-500"
@@ -96,7 +96,7 @@ const GamePage = ({ socket, state, currentGame }: TProps) => {
                 </div>
                 <p className={'ms-6 ' + hasAnsweredToQuestion(false)}> Attendez la fin du compteur pour passer à la question suivante </p>
             </div>
-            <ResultPage socket={socket} state={state} currentGame={currentGame} />
+            <ResultPage state={state} currentGame={currentGame} />
         </div>
     )
 }

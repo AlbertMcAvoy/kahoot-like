@@ -8,8 +8,8 @@ import {TClient} from "../../../types/TClient";
 type TProps = {
     socket: Socket;
     state: string;
-    currentGame: TGame;
-    currentPlayer: TClient;
+    currentGame: TGame | null;
+    currentPlayer: TClient | null;
 }
 
 const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
@@ -24,7 +24,7 @@ const LobbyPage = ({ socket, state, currentGame, currentPlayer }: TProps) => {
 
     const handleStartGame = (event: any) => {
         event.preventDefault();
-        let gameId = currentGame.id
+        let gameId = currentGame?.id
         socket.emit('server-kahoot-start', {
             gameId,
             topic,

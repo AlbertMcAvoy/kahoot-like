@@ -4,7 +4,7 @@ import { TGame } from "../../../types/TGame";
 
 type TProps = {
     state: string;
-    currentGame: TGame;
+    currentGame: TGame | null;
 }
 
 const ResultPage = ({ state, currentGame }: TProps) => {
